@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REAKYZ | 伦敦金实战：价格行为与订单流</title>
+    <title>REAKYZ | 伦敦金实战交易</title>
     <style>
         :root {
             --bg: #050608;
@@ -15,7 +15,7 @@
         body {
             background-color: var(--bg);
             color: var(--white);
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
             line-height: 1.6;
         }
@@ -25,7 +25,7 @@
         header {
             text-align: center;
             padding: 80px 0 40px;
-            background: linear-gradient(to bottom, #111, var(--bg));
+            background: radial-gradient(circle at top, #1a1c23 0%, var(--bg) 80%);
         }
         .logo {
             font-size: 4rem;
@@ -34,18 +34,20 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin: 0;
+            letter-spacing: -2px;
         }
 
         /* TradingView Widget */
         .chart-box {
-            border: 1px solid var(--gold);
+            border: 1px solid #30363d;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.15);
             margin-bottom: 40px;
+            background: #161b22;
         }
 
-        /* 交易逻辑模块 */
+        /* 核心模块布局 */
         .logic-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -56,29 +58,72 @@
             background: #0d1117;
             padding: 25px;
             border-radius: 8px;
+            border: 1px solid #21262d;
             border-left: 4px solid var(--gold);
+            transition: 0.3s;
         }
+        .logic-card:hover { border-color: var(--gold); }
         .logic-card h3 { color: var(--gold); margin-top: 0; }
+        .logic-card p { color: var(--gray); font-size: 0.9rem; }
 
-        /* 行动按钮 */
-        .cta-section { text-align: center; padding: 60px 0; }
-        .btn {
+        /* 转化区域 */
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+            background: rgba(255,255,255,0.02);
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .btn-yt {
             background: var(--gold);
             color: #000;
-            padding: 20px 50px;
-            font-size: 1.2rem;
+            padding: 18px 40px;
+            font-size: 1.1rem;
             font-weight: 800;
             text-decoration: none;
             border-radius: 5px;
             transition: 0.3s;
-            display: inline-block;
         }
-        .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4);
+        .btn-yt:hover {
+            background: var(--gold-bright);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
         }
+        .wx-box {
+            background: #161b22;
+            border: 1px solid #333;
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .copy-btn {
+            background: #333;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.2s;
+        }
+        .copy-btn:hover { background: var(--gold); color: #000; }
 
-        .disclaimer { font-size: 0.75rem; color: #444; text-align: center; margin-top: 50px; }
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid #21262d;
+            color: #484f58;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
@@ -86,7 +131,8 @@
 <header>
     <div class="container">
         <h1 class="logo">REAKYZ</h1>
-        <p style="color: var(--gold); letter-spacing: 5px; font-weight: bold;">XAUUSD 价格行为狙击手</p>
+        <p style="color: var(--gold); letter-spacing: 5px; font-weight: bold; margin-top: 10px;">XAUUSD 价格行为狙击手</p>
+        <p style="color: var(--gray); max-width: 600px; margin: 20px auto;">深耕伦敦金市场，拆解庄家逻辑，专注高盈亏比实战信号。</p>
     </div>
 </header>
 
@@ -96,64 +142,76 @@
         <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
         <script type="text/javascript">
             new TradingView.widget({
-                "width": "100%", "height": 500, "symbol": "OANDA:XAUUSD",
-                "interval": "30", "timezone": "Asia/Shanghai", "theme": "dark",
-                "style": "1", "locale": "zh_CN", "container_id": "tradingview_xau"
+                "width": "100%",
+                "height": 500,
+                "symbol": "OANDA:XAUUSD",
+                "interval": "30",
+                "timezone": "Asia/Shanghai",
+                "theme": "dark",
+                "style": "1",
+                "locale": "zh_CN",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview_xau"
             });
         </script>
     </div>
 
-    <h2 style="text-align:center;">核心交易逻辑 (The Edge)</h2>
+    <h2 style="text-align:center; margin-bottom: 30px;">核心交易逻辑</h2>
     <div class="logic-grid">
         <div class="logic-card">
             <h3>01. 价格行为 (PA)</h3>
-            <p>摒弃滞后指标。关注 K 线形态与关键支撑阻力位的互动，只交易市场真实发生的动作。</p>
+            <p>摒弃滞后指标。只关注 K 线形态与关键支撑阻力位的互动，捕捉市场最真实的动作。</p>
         </div>
         <div class="logic-card">
             <h3>02. 流动性清算</h3>
-            <p>识别机构洗盘陷阱。在散户的止损位寻找反向入场机会，与聪明钱站在一起。</p>
+            <p>识别机构洗盘行为。在散户的止损位寻找反向入场机会，与“聪明钱”站在一起。</p>
         </div>
         <div class="logic-card">
             <h3>03. 严苛盈亏比</h3>
-            <p>只执行盈亏比 > 3:1 的计划。利用小级别精准入场博取大级别趋势收益。</p>
+            <p>只执行盈亏比 > 3:1 的计划。利用小级别精准入场（5M/15M）博取波段趋势收益。</p>
         </div>
     </div>
 
-    <div class="<div class="cta-section">
-        <p style="color:var(--gray); margin-bottom: 20px;">“不预测行情，只追踪逻辑。”</p>
+    <div class="cta-section">
+        <h3 style="margin-top:0;">加入 REAKYZ 实战交易圈</h3>
+        <p style="color:var(--gray);">“不预测行情，只追踪逻辑。”</p>
         
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-            <a href="https://www.youtube.com/@reakyz?sub_confirmation=1" target="_blank" class="btn">
+        <div class="button-group">
+            <a href="https://www.youtube.com/@reakyz?sub_confirmation=1" target="_blank" class="btn-yt">
                 订阅 YouTube 频道
             </a>
 
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid #333; padding: 15px 30px; border-radius: 5px; display: flex; align-items: center; gap: 10px;">
-                <span style="color: var(--gold); font-weight: bold;">WeChat:</span>
-                <span style="font-family: monospace; letter-spacing: 1px; color: var(--gold-bright);">cz213200</span>
-                <button onclick="copyWX()" style="background: var(--gold); border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">复制</button>
+            <div class="wx-box">
+                <span style="color: var(--gray); font-size: 0.9rem;">WeChat:</span>
+                <span style="font-weight: bold; color: var(--gold-bright); font-family: monospace;">cz213200</span>
+                <button class="copy-btn" onclick="copyWX()">复制微信号</button>
             </div>
         </div>
-        
-        <p style="margin-top: 20px; color: var(--gray); font-size: 0.9rem;">
-            添加微信请备注：<span style="color: var(--gold);">实战交流</span>（领取每日交易复盘模版）
+        <p style="margin-top: 25px; color: var(--gold); font-size: 0.9rem; font-weight: bold;">
+            添加请备注：实战交流 (领取每日复盘模版)
         </p>
     </div>
-
-    <script>
-        function copyWX() {
-            navigator.clipboard.writeText('cz213200').then(() => {
-                alert('微信号 cz213200 已复制，请前往微信添加好友');
-            });
-        }
-    </script>">
-        <p style="color:var(--gray); margin-bottom: 20px;">“不预测行情，只追踪逻辑。”</p>
-        <a href="https://www.youtube.com/@reakyz?sub_confirmation=1" target="_blank" class="btn">前往 YouTube 订阅 REAKYZ</a>
-    </div>
-
-    <div class="disclaimer">
-        风险声明：伦敦金（XAUUSD）交易伴随巨大风险。本网页及 @reakyz 频道内容仅供参考，不构成投资建议。
-    </div>
 </div>
+
+<footer>
+    <div class="container">
+        <p>风险提示：伦敦金交易具有极高的亏损风险。本站所有内容仅作为个人经验分享，不构成投资建议。请审慎决策。</p>
+        <p>&copy; 2026 REAKYZ TRADING. 洞察黄金价值.</p>
+    </div>
+</footer>
+
+<script>
+    function copyWX() {
+        const wxID = 'cz213200';
+        navigator.clipboard.writeText(wxID).then(() => {
+            alert('微信号 ' + wxID + ' 已复制！\n请前往微信搜索添加。');
+        }).catch(err => {
+            console.error('无法复制', err);
+        });
+    }
+</script>
 
 </body>
 </html>
